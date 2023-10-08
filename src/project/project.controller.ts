@@ -1,9 +1,32 @@
+import { ProjectCreateDto } from 'src/dto/projectsDTO/create.project.dto';
 import { ProjectService } from './project.service';
-import { Controller, Res, Get, HttpStatus } from '@nestjs/common';
+import { Controller, Res, Get, Post, Body, HttpStatus } from '@nestjs/common';
 
 @Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
+
+  // Create project
+  @Post()
+  async createProject(
+    @Res() response,
+    @Body() projectCreateDto: ProjectCreateDto,
+  ) {
+    try {
+      const newProject = this.projectService.createProject(projectCreateDto);
+      return response.status(HttpStatus.CREATED).json({
+        statusCode: 200,
+        message: 'project create has been succesfull',
+        newProject,
+      });
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'error project not create ',
+        error: 'Bad Request',
+      });
+    }
+  }
 
   // get all data
   @Get()

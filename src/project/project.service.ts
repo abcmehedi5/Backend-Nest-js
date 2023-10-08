@@ -24,4 +24,13 @@ export class ProjectService {
 
     return projectData;
   }
+
+  // delete project
+  async deleteProject(projectId: string): Promise<IProject> {
+    const deleteProject = await this.projectModel.findByIdAndDelete(projectId);
+    if (!deleteProject) {
+      throw new NotFoundException('project delete not found');
+    }
+    return deleteProject;
+  }
 }

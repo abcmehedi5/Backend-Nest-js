@@ -1,6 +1,15 @@
 import { ProjectCreateDto } from 'src/dto/projectsDTO/create.project.dto';
 import { ProjectService } from './project.service';
-import { Controller, Res, Get, Post, Body, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Res,
+  Get,
+  Post,
+  Body,
+  Delete,
+  Param,
+  HttpStatus,
+} from '@nestjs/common';
 
 @Controller('projects')
 export class ProjectController {
@@ -42,6 +51,23 @@ export class ProjectController {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'error student not found ',
+        error: 'Bad Request',
+      });
+    }
+  }
+
+  @Delete('/:id')
+  async deleteProject(@Res() response, @Param('id') projectId: string) {
+    try {
+      const deleteProject = await this.projectService.deleteProject(projectId);
+      return response.status(HttpStatus.OK).json({
+        message: 'Student delete  successfull',
+        deleteProject,
+      });
+    } catch (error) {
+      return response.status(HttpStatus.OK).json({
+        statusCode: 400,
+        message: 'project delete not found',
         error: 'Bad Request',
       });
     }

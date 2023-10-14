@@ -33,4 +33,15 @@ export class ProjectService {
     }
     return deleteProject;
   }
+
+  // single projects get
+
+  async getSingleProject(projectId: string): Promise<IProject> {
+    const singleProject = await this.projectModel.findById(projectId);
+    if (!singleProject) {
+      throw new NotFoundException('project data not found');
+    }
+
+    return singleProject;
+  }
 }

@@ -42,7 +42,7 @@ export class ProjectController {
   async getAllProjects(@Res() response) {
     try {
       const projectData = await this.projectService.getAllProjects();
-    
+
       return response.status(HttpStatus.OK).send(projectData);
     } catch (error) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -53,6 +53,8 @@ export class ProjectController {
     }
   }
 
+  // delete project
+
   @Delete('/:id')
   async deleteProject(@Res() response, @Param('id') projectId: string) {
     try {
@@ -62,9 +64,25 @@ export class ProjectController {
         deleteProject,
       });
     } catch (error) {
-      return response.status(HttpStatus.OK).json({
+      return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'project delete not found',
+        error: 'Bad Request',
+      });
+    }
+  }
+
+  // get single project
+  @Get('/:id')
+  async gtSingleProject(@Res() response, @Param('id') projectId: string) {
+    try {
+      const getSingleProject =
+        await this.projectService.getSingleProject(projectId);
+      return response.status(HttpStatus.OK).send(getSingleProject);
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'project data not found',
         error: 'Bad Request',
       });
     }

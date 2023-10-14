@@ -42,11 +42,8 @@ export class ProjectController {
   async getAllProjects(@Res() response) {
     try {
       const projectData = await this.projectService.getAllProjects();
-      console.log(projectData);
-      return response.status(HttpStatus.OK).json({
-        message: 'all project find successfull',
-        projectData,
-      });
+    
+      return response.status(HttpStatus.OK).send(projectData);
     } catch (error) {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,

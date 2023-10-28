@@ -41,11 +41,9 @@ export class BlogService {
     category: string,
   ): Promise<{ allBlogs: IBlog[]; uniqueCategories: string[] }> {
     // find all unique Categories
-    // const uniqueCategories = await this.blogModel.distinct('category'); // [ 'Learning Tips', 'Programming', 'Web Development' ]
-    const uniqueCategories: string[] = ["All"];
-const categoriesFromDatabase = await this.blogModel.distinct('category');
-uniqueCategories.push(...categoriesFromDatabase);
-
+    const uniqueCategories: string[] = ['All'];
+    const categoriesFromDatabase = await this.blogModel.distinct('category');
+    uniqueCategories.push(...categoriesFromDatabase);
 
     if (!category) {
       // If no category is provided, return all blog posts
@@ -54,7 +52,6 @@ uniqueCategories.push(...categoriesFromDatabase);
         throw new NotFoundException('No blog data found.');
       }
       return { allBlogs, uniqueCategories };
-      
     } else {
       // If a category is provided, filter by category
       const getCategoryBlog = await this.blogModel.find({ category });

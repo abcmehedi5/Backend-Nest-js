@@ -35,15 +35,26 @@ export class BlogService {
     }
     return getSingleBlog;
   }
+
   // get blog data by category and all blog data
-  async getCategoryBlog(category: string): Promise<IBlog[]> {
+  async getCategoryBlog(
+    category: string,
+  ): Promise<{ allBlogs: IBlog[]; uniqueCategories: string[] }> {
+    // find all unique Categories
+    // const uniqueCategories = await this.blogModel.distinct('category'); // [ 'Learning Tips', 'Programming', 'Web Development' ]
+    const uniqueCategories: string[] = ["All"];
+const categoriesFromDatabase = await this.blogModel.distinct('category');
+uniqueCategories.push(...categoriesFromDatabase);
+
+
     if (!category) {
       // If no category is provided, return all blog posts
       const allBlogs = await this.blogModel.find();
       if (!allBlogs || allBlogs.length === 0) {
         throw new NotFoundException('No blog data found.');
       }
-      return allBlogs;
+      return { allBlogs, uniqueCategories };
+      
     } else {
       // If a category is provided, filter by category
       const getCategoryBlog = await this.blogModel.find({ category });
@@ -52,7 +63,7 @@ export class BlogService {
           `Oh! Sorry, no blog data found for category: ${category}. Please try again.`,
         );
       }
-      return getCategoryBlog;
+      return { allBlogs: getCategoryBlog, uniqueCategories };
     }
   }
 }

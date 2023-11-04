@@ -6,5 +6,6 @@ export interface IBlog extends Document {
   readonly image: string;
   readonly category: string;
   readonly date: string;
+  readonly email: string;
   readonly author: string;
 }

@@ -13,6 +13,9 @@ export class Blog {
 
   @Prop()
   date: string;
+  
+  @Prop()
+  email: string;
 
   @Prop()
   author: string;

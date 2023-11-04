@@ -19,7 +19,7 @@ export class BlogController {
   @Post('/create')
   async createBlog(@Res() response, @Body() createBlogDto: CreateBlogDto) {
     try {
-      const newBlog = this.blogService.createBlog(createBlogDto);
+      const newBlog = await this.blogService.createBlog(createBlogDto);
       return response.status(HttpStatus.CREATED).json({
         statusCode: 200,
         message: 'blog has been posted!',

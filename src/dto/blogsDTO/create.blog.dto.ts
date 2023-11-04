@@ -1,4 +1,10 @@
-import { IsString, MaxLength, IsNotEmpty, IsDateString } from 'class-validator';
+import {
+  IsString,
+  MaxLength,
+  IsNotEmpty,
+  IsDateString,
+  IsEmail,
+} from 'class-validator';
 export class CreateBlogDto {
   @IsString()
   @MaxLength(100)
@@ -25,6 +31,12 @@ export class CreateBlogDto {
   @IsNotEmpty()
   @IsDateString()
   readonly date: string;
+
+  @IsString()
+  @MaxLength(50)
+  @IsNotEmpty()
+  @IsEmail()
+  readonly email: string;
 
   @IsString()
   @MaxLength(100)

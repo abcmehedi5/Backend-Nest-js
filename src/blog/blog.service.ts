@@ -63,4 +63,16 @@ export class BlogService {
       return { allBlogs: getCategoryBlog, uniqueCategories };
     }
   }
+
+  // get my blog
+  async getMyBlogs(email: string): Promise<IBlog[]> {
+    const myBlogs = await this.blogModel.find({ email });
+
+    if (!myBlogs || myBlogs.length === 0) {
+      throw new NotFoundException(
+        'Oh! sorry blog data not found. Please try again!',
+      );
+    }
+    return myBlogs;
+  }
 }

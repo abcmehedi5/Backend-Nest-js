@@ -79,4 +79,19 @@ export class BlogController {
       });
     }
   }
+
+  // get my blogs
+  @Get('/Myblog/all')
+  async getMyBlog(@Res() response, @Query('email') email: string) {
+    try {
+      const getMyBlog = await this.blogService.getMyBlogs(email);
+      return response.status(HttpStatus.OK).send(getMyBlog);
+    } catch (error) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        statusCode: HttpStatus.NOT_FOUND,
+        message: error.message,
+        error: 'Not Found',
+      });
+    }
+  }
 }

@@ -75,4 +75,14 @@ export class BlogService {
     }
     return myBlogs;
   }
+
+  // delete blog by id
+  async deleteBlog(blogId: string): Promise<void> {
+    const deletedBlog = await this.blogModel.findByIdAndDelete(blogId);
+    if (!deletedBlog) {
+      throw new NotFoundException(
+        'Oh! Sorry, the blog data you want to delete was not found.',
+      );
+    }
+  }
 }

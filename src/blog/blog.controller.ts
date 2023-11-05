@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from 'src/dto/blogsDTO/create.blog.dto';
@@ -64,8 +65,6 @@ export class BlogController {
     }
   }
 
-
-
   @Get()
   async getCategoryBlog(@Res() response, @Query('category') category: string) {
     try {
@@ -91,6 +90,25 @@ export class BlogController {
         statusCode: HttpStatus.NOT_FOUND,
         message: error.message,
         error: 'Not Found',
+      });
+    }
+  }
+
+  // delete blog by id
+
+  @Delete('/:id')
+  async deleteBlog(@Res() response, @Param('id') blogId: string) {
+    try {
+      await this.blogService.deleteBlog(blogId);
+      return response.status(HttpStatus.OK).json({
+        statusCode: 200,
+        message: 'Blog Delete successfull',
+      });
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'Oh! Sorry, the blog data you want to delete was not found.',
+        error: 'Bad Request',
       });
     }
   }

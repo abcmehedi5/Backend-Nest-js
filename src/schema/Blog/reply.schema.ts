@@ -10,7 +10,7 @@ export class Reply {
   name: string;
 
   @Prop()
-  date: string;
+  date: Date;
 
   @Prop()
   email: string;

@@ -1,5 +1,5 @@
 import { IsString, MaxLength, IsNotEmpty, IsDateString } from 'class-validator';
-export class createReplyDto {
+export class CreateReplyDto {
   @IsString()
   @IsNotEmpty()
   readonly text: string;
@@ -12,6 +12,7 @@ export class createReplyDto {
   @IsString()
   @MaxLength(50)
   @IsNotEmpty()
+  @IsDateString()
   readonly date: string;
 
   @IsString()
@@ -20,8 +21,5 @@ export class createReplyDto {
   readonly email: string;
 
   @IsString()
-  @MaxLength(100)
-  @IsNotEmpty()
-  @IsDateString()
   readonly image: string;
 }

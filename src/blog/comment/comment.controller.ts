@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from 'src/dto/blogsDTO/create.comment.dto';
+import { IReply } from 'src/interfaces/Blog-interface/reply.interface';
+import { CreateReplyDto } from 'src/dto/blogsDTO/create.reply.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -33,6 +35,32 @@ export class CommentController {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Failed to post the comment.',
+        error: 'Bad Request',
+      });
+    }
+  }
+
+  // Add a reply to a comment
+  @Post('/:commentId/reply')
+  async addReplyToComment(
+    @Res() response,
+    @Param('commentId') commentId: string,
+    @Body() createReplyDto: CreateReplyDto,
+  ) {
+    try {
+      const updatedComment = await this.commentService.addReply(
+        commentId,
+        createReplyDto,
+      );
+      return response.status(HttpStatus.CREATED).json({
+        statusCode: 201,
+        message: 'Reply has been added to the comment!',
+        updatedComment,
+      });
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'Failed to add a reply to the comment.',
         error: 'Bad Request',
       });
     }

@@ -15,8 +15,8 @@ export class CommentService {
   }
 
   // get comment by blog id
-  async getCommentByBlog(): Promise<IComment[]> {
-    const commentData = await this.commentModel.find();
+  async getCommentByBlog(blogId:string): Promise<IComment[]> {
+    const commentData = await this.commentModel.find({blogId});
     if (!commentData) {
       throw new NotFoundException('Comment not found.');
     }

@@ -15,8 +15,7 @@ import { CreateCommentDto } from 'src/dto/blogsDTO/create.comment.dto';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-
-//   create comment
+  //   create comment
   @Post('/create')
   async createComment(
     @Res() response,
@@ -39,12 +38,11 @@ export class CommentController {
     }
   }
 
-  //   get all comment
-
-  @Get()
-  async getCommentByBlog(@Res() response) {
+  //   get comment by blog
+  @Get('/:blogId')
+  async getCommentByBlog(@Res() response, @Param('blogId') blogId: string) {
     try {
-      const commentData = await this.commentService.getCommentByBlog();
+      const commentData = await this.commentService.getCommentByBlog(blogId);
       return response.status(HttpStatus.OK).send(commentData);
     } catch (error) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -54,6 +52,7 @@ export class CommentController {
       });
     }
   }
+
   // delete comment by id
 
   @Delete('/:id')

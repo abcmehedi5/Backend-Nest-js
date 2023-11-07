@@ -7,8 +7,8 @@ import { projectSchema } from './schema/project.schema';
 import { ProjectService } from './project/project.service';
 import { BlogService } from './blog/blog.service';
 import { BlogController } from './blog/blog.controller';
-import { blogSchema } from './schema/blog.schema';
-import { commentSchema } from './schema/comment.schema';
+import { blogSchema } from './schema/Blog/blog.schema';
+import { commentSchema } from './schema/Blog/comment.schema';
 import { BlogModule } from './blog/blog.module';
 
 @Module({

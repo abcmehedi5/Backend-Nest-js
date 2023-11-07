@@ -2,8 +2,11 @@
 import { Document } from 'mongoose';
 
 export interface IComment extends Document {
-  text: string;
   blogId: string;
-  image: string;
+  text: string;
+  name: string;
+  date: string;
   email: string;
+  image: string;
+  replies: [];
 }

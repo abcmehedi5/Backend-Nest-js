@@ -8,6 +8,8 @@ import { ProjectService } from './project/project.service';
 import { BlogService } from './blog/blog.service';
 import { BlogController } from './blog/blog.controller';
 import { blogSchema } from './schema/blog.schema';
+import { commentSchema } from './schema/comment.schema';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -16,6 +18,7 @@ import { blogSchema } from './schema/blog.schema';
     }),
     MongooseModule.forFeature([{ name: 'Project', schema: projectSchema }]),
     MongooseModule.forFeature([{ name: 'Blog', schema: blogSchema }]),
+    BlogModule,
   ],
   controllers: [AppController, ProjectController, BlogController],
   providers: [AppService, ProjectService, BlogService],

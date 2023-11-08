@@ -10,14 +10,13 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from 'src/dto/blogsDTO/create.comment.dto';
-import { IReply } from 'src/interfaces/Blog-interface/reply.interface';
 import { CreateReplyDto } from 'src/dto/blogsDTO/create.reply.dto';
 
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  //   create comment
+  //   create comment------------------------------
   @Post('/create')
   async createComment(
     @Res() response,
@@ -40,7 +39,7 @@ export class CommentController {
     }
   }
 
-  // Add a reply to a comment
+  // Add a reply to a comment--------------------------
   @Post('/:commentId/reply')
   async addReplyToComment(
     @Res() response,
@@ -66,7 +65,7 @@ export class CommentController {
     }
   }
 
-  //   get comment by blog
+  //   get comment by blog-----------------------------
   @Get('/:blogId')
   async getCommentByBlog(@Res() response, @Param('blogId') blogId: string) {
     try {
@@ -81,7 +80,7 @@ export class CommentController {
     }
   }
 
-  // delete comment by id
+  // delete comment by id----------------------
 
   @Delete('/:id')
   async deleteComment(@Res() response, @Param('id') commentId: string) {

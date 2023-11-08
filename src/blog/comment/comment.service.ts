@@ -16,7 +16,7 @@ export class CommentService {
     return createdComment.save();
   }
 
-  // Add a reply to a comment
+  // Add a reply to a comment----------------------
   async addReply(
     commentId: string,
     createReplyDto: CreateReplyDto,
@@ -25,7 +25,7 @@ export class CommentService {
     if (!comment) {
       throw new NotFoundException('Comment not found.');
     }
-    // Create an IReply object from the CreateReplyDto
+    // Create an IReply object from the CreateReplyDto----------------
     const newReply: IReply = {
       text: createReplyDto.text,
       name: createReplyDto.name,
@@ -37,7 +37,7 @@ export class CommentService {
     return comment.save();
   }
 
-  // get comment by blog id
+  // get comment by blog id-------------------
   async getCommentByBlog(blogId: string): Promise<IComment[]> {
     const commentData = await this.commentModel.find({ blogId });
     if (!commentData) {
@@ -46,7 +46,7 @@ export class CommentService {
     return commentData;
   }
 
-  //   delete comment by id
+  //   delete comment by id------------------------
   async deleteComment(commentId: string): Promise<void> {
     const deletedComment = await this.commentModel.findByIdAndDelete(commentId);
     if (!deletedComment) {

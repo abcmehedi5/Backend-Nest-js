@@ -8,14 +8,16 @@ import { ProjectService } from './project/project.service';
 import { BlogService } from './blog/blog.service';
 import { BlogController } from './blog/blog.controller';
 import { blogSchema } from './schema/Blog/blog.schema';
-import { commentSchema } from './schema/Blog/comment.schema';
 import { BlogModule } from './blog/blog.module';
-
+console.log(  process.env.DATABASE_URL);
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017', {
-      dbName: 'Pro-edu',
-    }),
+    MongooseModule.forRoot(
+      'mongodb+srv://development:development@cluster0.mbjz2.mongodb.net/?retryWrites=true&w=majority',
+      {
+        dbName: 'hisanmastery',
+      },
+    ),
     MongooseModule.forFeature([{ name: 'Project', schema: projectSchema }]),
     MongooseModule.forFeature([{ name: 'Blog', schema: blogSchema }]),
     BlogModule,

@@ -9,11 +9,11 @@ import { BlogService } from './blog/blog.service';
 import { BlogController } from './blog/blog.controller';
 import { blogSchema } from './schema/Blog/blog.schema';
 import { BlogModule } from './blog/blog.module';
-console.log(  process.env.DATABASE_URL);
 @Module({
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://development:development@cluster0.mbjz2.mongodb.net/?retryWrites=true&w=majority',
+      // process.env.DATABASE_URL,
       {
         dbName: 'hisanmastery',
       },

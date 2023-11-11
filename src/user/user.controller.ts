@@ -1,5 +1,5 @@
 import { UserService } from './user.service';
-import { Controller, Post, Get, Res, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Res, Body, HttpStatus, Param, Query } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/userDTO/create.user.dto';
 import { IUser } from 'src/interfaces/User-interface/user.interface';
 
@@ -30,6 +30,21 @@ export class UserController {
         try {
             const users = await this.userService.getUser();
             return response.status(HttpStatus.OK).send(users);
+        } catch (error) {
+            return response.status(HttpStatus.BAD_REQUEST).json({
+                statusCode: 400,
+                message: 'user not found',
+                error: 'Bad Request',
+            });
+        }
+    }
+
+    // get single user
+    @Get('/singleUser')
+    async getSingleUser(@Res() response, @Query('email') email: string) {
+        try {
+            const getUser = await this.userService.getSingleUser(email)
+            return response.status(HttpStatus.OK).send(getUser)
         } catch (error) {
             return response.status(HttpStatus.BAD_REQUEST).json({
                 statusCode: 400,

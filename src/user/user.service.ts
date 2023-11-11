@@ -25,4 +25,14 @@ export class UserService {
         }
         return getUserData
     }
+    // get single user by email
+    async getSingleUser(email: string): Promise<IUser> {
+        const getUserData = await this.userModel.findOne({ email })
+        if (!getUserData) {
+            throw new NotFoundException(
+                'sorry user data not found'
+            )
+        }
+        return getUserData
+    }
 }

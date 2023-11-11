@@ -53,4 +53,10 @@ export class CreateUserDto {
   @MaxLength(30)
   @Optional()
   readonly birthday: string;
+
+
+  @IsString()
+  @MaxLength(15)
+  @Optional()
+  readonly gender: string;
 }

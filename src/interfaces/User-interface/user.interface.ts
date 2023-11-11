@@ -10,4 +10,5 @@ export interface IUser extends Document {
   readonly status: string;
   readonly bio: string;
   readonly birthday: string;
+  readonly gender: string;
 }

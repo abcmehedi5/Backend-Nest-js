@@ -12,11 +12,13 @@ import { BlogModule } from './blog/blog.module';
 import { UserService } from './user/user.service';
 import { UserController } from './user/user.controller';
 import { userSchema } from './schema/user/user.schema';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(
-      'mongodb+srv://development:development@cluster0.mbjz2.mongodb.net/?retryWrites=true&w=majority',
-      // process.env.DATABASE_URL,
+      // 'mongodb+srv://development:development@cluster0.mbjz2.mongodb.net/?retryWrites=true&w=majority',
+      process.env.DATABASE_URL,
       {
         dbName: 'hisanmastery',
       },

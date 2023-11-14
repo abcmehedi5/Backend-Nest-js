@@ -11,17 +11,24 @@ import { blogSchema } from './schema/Blog/blog.schema';
 import { BlogModule } from './blog/blog.module';
 import { UserService } from './user/user.service';
 import { UserController } from './user/user.controller';
+<<<<<<< HEAD
+=======
+import { userSchema } from './schema/user/user.schema';
+import { ConfigModule } from '@nestjs/config';
+>>>>>>> 64152cce420c24137d03f09cb1e149fcc50ed727
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(
-      'mongodb+srv://development:development@cluster0.mbjz2.mongodb.net/?retryWrites=true&w=majority',
-      // process.env.DATABASE_URL,
+      // 'mongodb+srv://development:development@cluster0.mbjz2.mongodb.net/?retryWrites=true&w=majority',
+      process.env.DATABASE_URL,
       {
         dbName: 'hisanmastery',
       },
     ),
     MongooseModule.forFeature([{ name: 'Project', schema: projectSchema }]),
     MongooseModule.forFeature([{ name: 'Blog', schema: blogSchema }]),
+    MongooseModule.forFeature([{ name: 'User', schema: userSchema }]),
     BlogModule,
   ],
   controllers: [AppController, ProjectController, BlogController, UserController],

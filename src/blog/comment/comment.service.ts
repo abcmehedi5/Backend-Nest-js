@@ -1,45 +1,72 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { CreateCommentDto } from 'src/dto/blogsDTO/create.comment.dto';
 import { CreateReplyDto } from 'src/dto/blogsDTO/create.reply.dto';
-import { IComment } from 'src/interfaces/Blog-interface/comment.interface';
-import { IReply } from 'src/interfaces/Blog-interface/reply.interface';
+import { CommentEntity } from 'src/entity/Blog/comment.entity';
+import { Repository, FindOneOptions } from 'typeorm';
+import { ReplyEntity } from 'src/entity/Blog/reply.entity';
 
 @Injectable()
 export class CommentService {
-  constructor(@InjectModel('Comment') private commentModel: Model<IComment>) {}
+  constructor(
+    @InjectRepository(CommentEntity)
+    private commentsRepository: Repository<CommentEntity>,
+    @InjectRepository(ReplyEntity)
+    private readonly replyRepository: Repository<ReplyEntity>,
+  ) {}
 
-  // create comment
-  async createComment(createCommentDto: CreateCommentDto): Promise<IComment> {
-    const createdComment = await new this.commentModel(createCommentDto);
-    return createdComment.save();
+  async createComment(
+    createCommentDto: CreateCommentDto,
+  ): Promise<CommentEntity> {
+    const { blogId, text, name, date, email, image } = createCommentDto;
+
+    const createdComment = this.commentsRepository.create({
+      blogId: Number(blogId), // Assuming blogId is a number
+      text,
+      name,
+      date,
+      email,
+      image,
+    });
+
+    return this.commentsRepository.save(createdComment);
   }
 
   // Add a reply to a comment----------------------
   async addReply(
-    commentId: string,
+    commentId: number,
     createReplyDto: CreateReplyDto,
-  ): Promise<IComment> {
-    const comment = await this.commentModel.findById(commentId);
+  ): Promise<CommentEntity> {
+    const comment = await this.commentsRepository.findOne(
+      commentId as FindOneOptions,
+    );
+
     if (!comment) {
       throw new NotFoundException('Comment not found.');
     }
-    // Create an IReply object from the CreateReplyDto----------------
-    const newReply: IReply = {
+
+    const newReply = this.replyRepository.create({
       text: createReplyDto.text,
       name: createReplyDto.name,
       date: new Date(createReplyDto.date),
       email: createReplyDto.email,
       image: createReplyDto.image,
-    };
-    comment.replies.push(newReply);
-    return comment.save();
+      comment, // Assign the comment to the reply
+    });
+
+    await this.replyRepository.save(newReply);
+
+    // Refresh the comment's replies
+    comment.replies = await this.replyRepository.find({ where: { comment } });
+
+    return this.commentsRepository.save(comment);
   }
 
   // get comment by blog id-------------------
-  async getCommentByBlog(blogId: string): Promise<IComment[]> {
-    const commentData = await this.commentModel.find({ blogId });
+  async getCommentByBlog(blogId: number): Promise<CommentEntity[]> {
+    const commentData = await this.commentsRepository.find({
+      where: { blogId },
+    });
     if (!commentData) {
       throw new NotFoundException('Comment not found.');
     }
@@ -48,7 +75,7 @@ export class CommentService {
 
   //   delete comment by id------------------------
   async deleteComment(commentId: string): Promise<void> {
-    const deletedComment = await this.commentModel.findByIdAndDelete(commentId);
+    const deletedComment = await this.commentsRepository.delete(commentId);
     if (!deletedComment) {
       throw new NotFoundException('Comment not found.');
     }

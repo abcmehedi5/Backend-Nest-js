@@ -1,7 +1,4 @@
-// src/interfaces/Comment-interface/comment.interface.ts
-import { Document } from 'mongoose';
 import { IReply } from './reply.interface';
-
 export interface IComment extends Document {
   readonly blogId: string;
   readonly text: string;

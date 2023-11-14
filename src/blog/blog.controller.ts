@@ -35,24 +35,10 @@ export class BlogController {
     }
   }
 
-  // get all blog-----------------------
-  // @Get()
-  // async getAllBlogs(@Res() response) {
-  //   try {
-  //     const blogs = await this.blogService.getAllBlog();
-  //     return response.status(HttpStatus.OK).send(blogs);
-  //   } catch (error) {
-  //     return response.status(HttpStatus.BAD_REQUEST).json({
-  //       statusCode: 400,
-  //       message: 'oh! sorry blog data not found.',
-  //       error: 'Bad Request',
-  //     });
-  //   }
-  // }
 
   // blog find by id for single blog ---------
   @Get('/:id')
-  async getSingleBlog(@Res() response, @Param('id') blogId: string) {
+  async getSingleBlog(@Res() response, @Param('id') blogId: number) {
     try {
       const singleBlogData = await this.blogService.singleBlog(blogId);
       return response.status(HttpStatus.OK).send(singleBlogData);
@@ -97,7 +83,7 @@ export class BlogController {
   // delete blog by id
 
   @Delete('/:id')
-  async deleteBlog(@Res() response, @Param('id') blogId: string) {
+  async deleteBlog(@Res() response, @Param('id') blogId: number) {
     try {
       await this.blogService.deleteBlog(blogId);
       return response.status(HttpStatus.OK).json({

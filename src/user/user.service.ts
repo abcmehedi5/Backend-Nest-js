@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Injectable } from '@nestjs/common';
-
-@Injectable()
-export class UserService {}
-=======
 import { CreateUserDto } from './../dto/userDTO/create.user.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -42,4 +36,3 @@ export class UserService {
         return getUserData
     }
 }
->>>>>>> 64152cce420c24137d03f09cb1e149fcc50ed727

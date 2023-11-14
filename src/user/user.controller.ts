@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Controller } from '@nestjs/common';
-
-@Controller('user')
-export class UserController {}
-=======
 import { UserService } from './user.service';
 import { Controller, Post, Get, Res, Body, HttpStatus, Param, Query } from '@nestjs/common';
 import { CreateUserDto } from 'src/dto/userDTO/create.user.dto';
@@ -62,4 +56,3 @@ export class UserController {
 
 
 }
->>>>>>> 64152cce420c24137d03f09cb1e149fcc50ed727

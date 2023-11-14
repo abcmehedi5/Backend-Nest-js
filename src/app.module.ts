@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -11,11 +12,7 @@ import { blogSchema } from './schema/Blog/blog.schema';
 import { BlogModule } from './blog/blog.module';
 import { UserService } from './user/user.service';
 import { UserController } from './user/user.controller';
-<<<<<<< HEAD
-=======
 import { userSchema } from './schema/user/user.schema';
-import { ConfigModule } from '@nestjs/config';
->>>>>>> 64152cce420c24137d03f09cb1e149fcc50ed727
 @Module({
   imports: [
     ConfigModule.forRoot(),

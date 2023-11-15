@@ -1,38 +1,37 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './../dto/userDTO/create.user.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { IUser } from 'src/interfaces/User-interface/user.interface';
-
+import { UserEntity } from 'src/entity/User/user.entity';
+import { Repository, FindOneOptions } from 'typeorm';
 @Injectable()
 export class UserService {
-    constructor(@InjectModel("User") private userModel: Model<IUser>) { }
+  constructor(
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
+  ) {}
 
-    // create user
-    async createUser(createUserDto: CreateUserDto): Promise<IUser> {
-        const createUser = await new this.userModel(createUserDto);
-        return createUser.save()
+  // create user
+  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const user = this.usersRepository.create(createUserDto);
+    return this.usersRepository.save(user);
+  }
 
+  // find user
+  async getUser(): Promise<UserEntity[]> {
+    const getUserData = await this.usersRepository.find();
+    if (!getUserData || getUserData.length == 0) {
+      throw new NotFoundException('sorry user data not found');
     }
-
-    // find user
-    async getUser(): Promise<IUser[]> {
-        const getUserData = await this.userModel.find()
-        if (!getUserData || getUserData.length == 0) {
-            throw new NotFoundException(
-                'sorry user data not found'
-            )
-        }
-        return getUserData
+    return getUserData;
+  }
+  // get single user by email
+  async getSingleUser(email: string): Promise<UserEntity> {
+    const getUserData = await this.usersRepository.findOne({
+      email,
+    } as FindOneOptions<UserEntity>);
+    if (!getUserData) {
+      throw new NotFoundException('sorry user data not found');
     }
-    // get single user by email
-    async getSingleUser(email: string): Promise<IUser> {
-        const getUserData = await this.userModel.findOne({ email })
-        if (!getUserData) {
-            throw new NotFoundException(
-                'sorry user data not found'
-            )
-        }
-        return getUserData
-    }
+    return getUserData;
+  }
 }

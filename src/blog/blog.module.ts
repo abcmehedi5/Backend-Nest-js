@@ -1,14 +1,15 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { commentSchema } from 'src/schema/Blog/comment.schema';
 import { CommentController } from './comment/comment.controller';
 import { CommentService } from './comment/comment.service';
+import { BlogEntity } from 'src/entity/Blog/blog.entity';
+import { ReplyEntity } from 'src/entity/Blog/reply.entity';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: 'Comment', schema: commentSchema }]),
-  ],
+  imports: [TypeOrmModule.forFeature([BlogEntity]), CommentModule],
   controllers: [CommentController],
   providers: [CommentService],
+  exports: [TypeOrmModule],
 })
 export class BlogModule {}

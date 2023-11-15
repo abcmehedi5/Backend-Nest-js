@@ -26,13 +26,13 @@ export class CommentController {
       const newComment =
         await this.commentService.createComment(createCommentDto);
       return response.status(HttpStatus.CREATED).json({
-        statusCode: 201,
+        statusCode: HttpStatus.CREATED,
         message: 'Comment has been posted!',
         newComment,
       });
     } catch (error) {
       return response.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: 400,
+        statusCode: HttpStatus.BAD_REQUEST,
         message: 'Failed to post the comment.',
         error: 'Bad Request',
       });
@@ -43,7 +43,7 @@ export class CommentController {
   @Post('/:commentId/reply')
   async addReplyToComment(
     @Res() response,
-    @Param('commentId') commentId: string,
+    @Param('commentId') commentId: number,
     @Body() createReplyDto: CreateReplyDto,
   ) {
     try {
@@ -65,9 +65,27 @@ export class CommentController {
     }
   }
 
+  // get reply by comment id
+  @Get('/reply/:commentId')
+  async getCommentReply(
+    @Res() response,
+    @Param('commentId') commentId: number,
+  ) {
+    try {
+      const commentData = await this.commentService.getCommentReply(commentId);
+      return response.status(HttpStatus.OK).send(commentData);
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'oh! sorry reply data not found.',
+        error: 'Bad Request',
+      });
+    }
+  }
+
   //   get comment by blog-----------------------------
   @Get('/:blogId')
-  async getCommentByBlog(@Res() response, @Param('blogId') blogId: string) {
+  async getCommentByBlog(@Res() response, @Param('blogId') blogId: number) {
     try {
       const commentData = await this.commentService.getCommentByBlog(blogId);
       return response.status(HttpStatus.OK).send(commentData);

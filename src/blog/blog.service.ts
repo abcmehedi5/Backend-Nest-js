@@ -1,22 +1,25 @@
-import { Model } from 'mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { IBlog } from 'src/interfaces/Blog-interface/blog.interface';
 import { CreateBlogDto } from 'src/dto/blogsDTO/create.blog.dto';
+import { BlogEntity } from 'src/entity/Blog/blog.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, FindOneOptions } from 'typeorm';
 
 @Injectable()
 export class BlogService {
-  constructor(@InjectModel('Blog') private blogModel: Model<IBlog>) {} // IBlog means blog interface
+  constructor(
+    @InjectRepository(BlogEntity)
+    private blogsRepository: Repository<BlogEntity>,
+  ) {}
 
   // create blog for user-------------------
-  async createBlog(blogCreateDto: CreateBlogDto): Promise<IBlog> {
-    const createBlog = await new this.blogModel(blogCreateDto);
-    return createBlog.save();
+  async createBlog(blogCreateDto: CreateBlogDto): Promise<BlogEntity> {
+    const createBlog = await this.blogsRepository.create(blogCreateDto);
+    return this.blogsRepository.save(createBlog);
   }
 
   // find all Blog--------------------------
-  async getAllBlog(): Promise<IBlog[]> {
-    const blogData = await this.blogModel.find();
+  async getAllBlog(): Promise<BlogEntity[]> {
+    const blogData = await this.blogsRepository.find();
     if (!blogData || blogData.length == 0) {
       throw new NotFoundException(
         'Oh! sorry blog data not found. please try again!',
@@ -26,35 +29,50 @@ export class BlogService {
   }
 
   // blog find by id for single blog -----------
-  async singleBlog(blogId: string): Promise<IBlog> {
-    const getSingleBlog = await this.blogModel.findById(blogId);
-    if (!getSingleBlog) {
-      throw new NotFoundException(
-        'Oh! sorry blog data not found. please try again!',
-      );
+  async singleBlog(blogId: number): Promise<BlogEntity> {
+    try {
+      console.log('Fetching blog with ID:', blogId);
+
+      const getSingleBlog = await this.blogsRepository.findOne({
+        where: { id: blogId },
+      });
+
+      if (!getSingleBlog) {
+        throw new NotFoundException('Blog not found');
+      }
+      return getSingleBlog;
+    } catch (error) {
+      console.error('Error fetching blog:', error);
+      throw error; // Re-throw the error to ensure proper propagation
     }
-    return getSingleBlog;
   }
 
   // get blog data by category and all blog data
   async getCategoryBlog(
     category: string,
-  ): Promise<{ allBlogs: IBlog[]; uniqueCategories: string[] }> {
-    // find all unique Categories
+  ): Promise<{ allBlogs: BlogEntity[]; uniqueCategories: string[] }> {
+    // Find all unique Categories
     const uniqueCategories: string[] = ['All'];
-    const categoriesFromDatabase = await this.blogModel.distinct('category');
-    uniqueCategories.push(...categoriesFromDatabase);
+    const categoriesFromDatabase = await this.blogsRepository
+      .createQueryBuilder()
+      .select('DISTINCT(category)')
+      .getRawMany();
+    uniqueCategories.push(
+      ...categoriesFromDatabase.map((entry) => entry.category),
+    );
 
     if (!category) {
       // If no category is provided, return all blog posts
-      const allBlogs = await this.blogModel.find();
+      const allBlogs = await this.blogsRepository.find();
       if (!allBlogs || allBlogs.length === 0) {
         throw new NotFoundException('No blog data found.');
       }
       return { allBlogs, uniqueCategories };
     } else {
       // If a category is provided, filter by category
-      const getCategoryBlog = await this.blogModel.find({ category });
+      const getCategoryBlog = await this.blogsRepository.find({
+        where: { category },
+      });
       if (!getCategoryBlog || getCategoryBlog.length === 0) {
         throw new NotFoundException(
           `Oh! Sorry, no blog data found for category: ${category}. Please try again.`,
@@ -65,8 +83,8 @@ export class BlogService {
   }
 
   // get my blog
-  async getMyBlogs(email: string): Promise<IBlog[]> {
-    const myBlogs = await this.blogModel.find({ email });
+  async getMyBlogs(email: string): Promise<BlogEntity[]> {
+    const myBlogs = await this.blogsRepository.find({ where: { email } });
 
     if (!myBlogs || myBlogs.length === 0) {
       throw new NotFoundException(
@@ -77,8 +95,9 @@ export class BlogService {
   }
 
   // delete blog by id
-  async deleteBlog(blogId: string): Promise<void> {
-    const deletedBlog = await this.blogModel.findByIdAndDelete(blogId);
+  async deleteBlog(blogId: number): Promise<void> {
+    console.log(blogId);
+    const deletedBlog = await this.blogsRepository.delete(blogId);
     if (!deletedBlog) {
       throw new NotFoundException(
         'Oh! Sorry, the blog data you want to delete was not found.',

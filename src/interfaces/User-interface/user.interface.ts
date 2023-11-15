@@ -1,6 +1,4 @@
-import { Document } from 'mongoose';
-
-export interface IUser extends Document {
+export interface IUser  {
   readonly displayName: string;
   readonly image: string;
   readonly date: string;

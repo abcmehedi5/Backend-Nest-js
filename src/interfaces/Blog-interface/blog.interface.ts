@@ -1,6 +1,4 @@
-import { Document } from 'mongoose';
-
-export interface IBlog extends Document {
+export interface IBlog  {
   readonly title: string;
   readonly content: string;
   readonly image: string;

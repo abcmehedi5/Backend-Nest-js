@@ -1,6 +1,3 @@
-// src/interfaces/Comment-interface/comment.interface.ts
-import { Document } from 'mongoose';
-
 export interface IReply{
   text: string;
   name: string;

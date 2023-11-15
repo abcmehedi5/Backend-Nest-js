@@ -35,14 +35,16 @@ export class BlogController {
     }
   }
 
+  //blog find by id for single blog ---------
 
-  // blog find by id for single blog ---------
   @Get('/:id')
   async getSingleBlog(@Res() response, @Param('id') blogId: number) {
     try {
+      console.log('Fetching blog with ID:', blogId);
       const singleBlogData = await this.blogService.singleBlog(blogId);
       return response.status(HttpStatus.OK).send(singleBlogData);
     } catch (error) {
+      console.error('Error fetching blog:', error);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'oh! sorry single blog data not found.',

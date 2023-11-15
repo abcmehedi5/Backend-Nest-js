@@ -30,15 +30,21 @@ export class BlogService {
 
   // blog find by id for single blog -----------
   async singleBlog(blogId: number): Promise<BlogEntity> {
-    const getSingleBlog = await this.blogsRepository.findOne(
-      blogId as FindOneOptions<BlogEntity>,
-    );
+    try {
+      console.log('Fetching blog with ID:', blogId);
 
-    if (!getSingleBlog) {
-      throw new NotFoundException('Blog not found');
+      const getSingleBlog = await this.blogsRepository.findOne({
+        where: { id: blogId },
+      });
+
+      if (!getSingleBlog) {
+        throw new NotFoundException('Blog not found');
+      }
+      return getSingleBlog;
+    } catch (error) {
+      console.error('Error fetching blog:', error);
+      throw error; // Re-throw the error to ensure proper propagation
     }
-
-    return getSingleBlog;
   }
 
   // get blog data by category and all blog data

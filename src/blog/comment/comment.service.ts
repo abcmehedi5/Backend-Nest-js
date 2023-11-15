@@ -37,10 +37,8 @@ export class CommentService {
     commentId: number,
     createReplyDto: CreateReplyDto,
   ): Promise<CommentEntity> {
-    const comment = await this.commentsRepository.findOne(
-      commentId as FindOneOptions,
-    );
-
+    const comment = await this.commentsRepository.findOne(  commentId as FindOneOptions <CommentEntity>,);
+    console.log("working");
     if (!comment) {
       throw new NotFoundException('Comment not found.');
     }
@@ -53,7 +51,6 @@ export class CommentService {
       image: createReplyDto.image,
       comment, // Assign the comment to the reply
     });
-
     await this.replyRepository.save(newReply);
 
     // Refresh the comment's replies

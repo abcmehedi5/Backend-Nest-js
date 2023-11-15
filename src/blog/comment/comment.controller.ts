@@ -23,7 +23,8 @@ export class CommentController {
     @Body() createCommentDto: CreateCommentDto,
   ) {
     try {
-      const newComment = await this.commentService.createComment(createCommentDto);
+      const newComment =
+        await this.commentService.createComment(createCommentDto);
       return response.status(HttpStatus.CREATED).json({
         statusCode: HttpStatus.CREATED,
         message: 'Comment has been posted!',
@@ -59,6 +60,24 @@ export class CommentController {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Failed to add a reply to the comment.',
+        error: 'Bad Request',
+      });
+    }
+  }
+
+  // get reply by comment id
+  @Get('/reply/:commentId')
+  async getCommentReply(
+    @Res() response,
+    @Param('commentId') commentId: number,
+  ) {
+    try {
+      const commentData = await this.commentService.getCommentReply(commentId);
+      return response.status(HttpStatus.OK).send(commentData);
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'oh! sorry reply data not found.',
         error: 'Bad Request',
       });
     }

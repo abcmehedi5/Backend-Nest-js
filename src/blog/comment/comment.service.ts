@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from 'src/dto/blogsDTO/create.comment.dto';
 import { CreateReplyDto } from 'src/dto/blogsDTO/create.reply.dto';
 import { CommentEntity } from 'src/entity/Blog/comment.entity';
-import { Repository, FindOneOptions } from 'typeorm';
+import { Repository, FindOneOptions, FindManyOptions } from 'typeorm';
 import { ReplyEntity } from 'src/entity/Blog/reply.entity';
 
 @Injectable()
@@ -37,8 +37,10 @@ export class CommentService {
     commentId: number,
     createReplyDto: CreateReplyDto,
   ): Promise<CommentEntity> {
-    const comment = await this.commentsRepository.findOne(  commentId as FindOneOptions <CommentEntity>,);
-    console.log("working");
+    const comment = await this.commentsRepository.findOne({
+      where: { id: commentId },
+    });
+    console.log('working', comment);
     if (!comment) {
       throw new NotFoundException('Comment not found.');
     }
@@ -57,6 +59,18 @@ export class CommentService {
     comment.replies = await this.replyRepository.find({ where: { comment } });
 
     return this.commentsRepository.save(comment);
+  }
+
+  // get reply by comment id
+  async getCommentReply(commentId: number): Promise<ReplyEntity[]> {
+    const replyData = await this.replyRepository.find({
+      where: { commentId: commentId } as FindManyOptions<ReplyEntity>['where'],
+    });
+
+    if (!replyData || replyData.length === 0) {
+      throw new NotFoundException('Replies not found for the given commentId.');
+    }
+    return replyData;
   }
 
   // get comment by blog id-------------------

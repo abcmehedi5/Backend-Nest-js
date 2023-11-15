@@ -90,6 +90,7 @@ export class BlogService {
 
   // delete blog by id
   async deleteBlog(blogId: number): Promise<void> {
+    console.log(blogId);
     const deletedBlog = await this.blogsRepository.delete(blogId);
     if (!deletedBlog) {
       throw new NotFoundException(

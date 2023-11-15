@@ -12,6 +12,7 @@ import { BlogEntity } from './entity/Blog/blog.entity'; // Import your entities
 import { CommentEntity } from './entity/Blog/comment.entity';
 import { UserEntity } from './entity/User/user.entity';
 import { ReplyEntity } from './entity/Blog/reply.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ReplyEntity } from './entity/Blog/reply.entity';
       synchronize: true,
     }),
     BlogModule,
+    UserModule,
   ],
   controllers: [AppController, BlogController, UserController],
   providers: [AppService, BlogService, UserService],

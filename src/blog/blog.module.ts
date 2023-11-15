@@ -10,5 +10,6 @@ import { CommentModule } from './comment/comment.module';
   imports: [TypeOrmModule.forFeature([BlogEntity]), CommentModule],
   controllers: [CommentController],
   providers: [CommentService],
+  exports: [TypeOrmModule],
 })
 export class BlogModule {}

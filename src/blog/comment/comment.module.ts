@@ -7,5 +7,6 @@ import { ReplyEntity } from 'src/entity/Blog/reply.entity';
     imports: [TypeOrmModule.forFeature([CommentEntity,ReplyEntity])],
     controllers: [],
     providers: [],
+    exports: [TypeOrmModule],
   })
 export class CommentModule {}
